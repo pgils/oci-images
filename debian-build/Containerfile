@@ -18,7 +18,7 @@ RUN set -eu; \
         yasm \
         nasm \
         texinfo \
-        golang \
+        golang-go \
         cmake \
         meson \
         ninja-build \
