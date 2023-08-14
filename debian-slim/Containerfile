@@ -1,0 +1,11 @@
+ARG DEBIAN_VERSION=bookworm
+FROM docker.io/library/debian:${DEBIAN_VERSION}-slim
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN set -eu; \
+    apt-get update -q; \
+    apt-get install --no-install-recommends \
+        gosu \
+    ; \
+    rm -rf /var/lib/apt/lists/*;
