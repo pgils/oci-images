@@ -5,7 +5,9 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 RUN set -eu; \
     apt-get update -q; \
-    apt-get install --no-install-recommends \
+    apt-get install -y --no-install-recommends \
+        busybox \
+        ca-certificates \
         gosu \
     ; \
     rm -rf /var/lib/apt/lists/*;
