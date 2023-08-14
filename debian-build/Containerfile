@@ -11,25 +11,25 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN set -eu; \
     apt-get update -q; \
     apt-get install -qy --no-install-recommends \
-        locales \
-        sudo \
-        flex \
         bison \
-        yasm \
-        nasm \
-        texinfo \
-        golang-go \
         cmake \
+        flex \
+        golang-go \
+        locales \
         meson \
+        nasm \
         ninja-build \
         rclone \
+        sudo \
+        texinfo \
         vim-tiny \
         xxd \
+        yasm \
         # Debian packaging
-        dpkg-dev \
-        fakeroot \
         devscripts \
+        dpkg-dev \
         equivs \
+        fakeroot \
         lintian \
         quilt \
     ; \
