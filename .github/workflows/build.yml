@@ -70,7 +70,7 @@ jobs:
         with:
           context: ${{ matrix.context }}
           file: ${{ matrix.context }}/Containerfile
-          build-args: "DEBIAN_RELEASE=${{ matrix.release }}"
+          build-args: "DEBIAN_VERSION=${{ matrix.release }}"
           platforms: linux/amd64,linux/arm64
           push: ${{ github.ref == 'refs/heads/main' }}
           tags: ${{ steps.docker_meta.outputs.tags }}
