@@ -2,9 +2,10 @@ ARG DEBIAN_VERSION=bookworm
 FROM docker.io/library/buildpack-deps:${DEBIAN_VERSION} as build-base
 
 ARG DEBIAN_VERSION
+ARG GO_VERSION=1.22.8
 ARG LLVM_VERSION=18
-ARG BITBAKE_VERSION=2.8.0
-ARG UPX_VERSION=4.2.3
+ARG BITBAKE_VERSION=2.8.4
+ARG UPX_VERSION=4.2.4
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -14,7 +15,6 @@ RUN set -eu; \
         bison \
         cmake \
         flex \
-        golang-go \
         locales \
         meson \
         nasm \
@@ -37,6 +37,15 @@ RUN set -eu; \
     echo 'en_US.UTF-8 UTF-8' >> /etc/locale.gen && locale-gen
 ENV LANG=en_US.UTF-8
 ENV EDITOR=vim.tiny
+
+## Go
+# https://go.dev/dl/
+
+WORKDIR /go
+RUN set -eu; \
+    wget -qO- https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz \
+        | tar -xzf- --strip 1
+ENV PATH=/go/bin:$PATH
 
 ## bitbake
 # http://git.openembedded.org/bitbake/
