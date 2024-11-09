@@ -98,6 +98,7 @@ RUN set -eu; \
     sed -ie '/secure_path\|env_reset/d' /etc/sudoers ;
 
 COPY --chown=builder quiltrc /home/builder/.quiltrc
+COPY devscripts.conf /etc/
 
 ENV BB_ENV_PASSTHROUGH_ADDITIONS="$BB_ENV_PASSTHROUGH_ADDITIONS APT"
 ENV APT="sudo apt-get"
