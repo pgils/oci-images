@@ -41,11 +41,11 @@ ENV EDITOR=vim.tiny
 ## Go
 # https://go.dev/dl/
 
-WORKDIR /go
+WORKDIR /usr/local/go
 RUN set -eu; \
-    wget -qO- https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz \
+    wget -qO- "https://go.dev/dl/go${GO_VERSION}.linux-$(dpkg --print-architecture).tar.gz" \
         | tar -xzf- --strip 1
-ENV PATH=/go/bin:$PATH
+ENV PATH=/usr/local/go/bin:$PATH
 
 ## bitbake
 # http://git.openembedded.org/bitbake/
@@ -98,6 +98,7 @@ RUN set -eu; \
     sed -ie '/secure_path\|env_reset/d' /etc/sudoers ;
 
 COPY --chown=builder quiltrc /home/builder/.quiltrc
+COPY devscripts.conf /etc/
 
 ENV BB_ENV_PASSTHROUGH_ADDITIONS="$BB_ENV_PASSTHROUGH_ADDITIONS APT"
 ENV APT="sudo apt-get"
