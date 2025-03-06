@@ -2,16 +2,18 @@ ARG DEBIAN_VERSION=bookworm
 FROM docker.io/library/buildpack-deps:${DEBIAN_VERSION} as build-base
 
 ARG DEBIAN_VERSION
-ARG GO_VERSION=1.23.6
+ARG GO_VERSION=1.24.1
 ARG LLVM_VERSION=19
 ARG BITBAKE_VERSION=2.8.7
-ARG UPX_VERSION=4.2.4
+ARG UPX_VERSION=5.0.0
 
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN set -eu; \
     apt-get update -q; \
     apt-get install -qy --no-install-recommends \
+        clang-"${LLVM_VERSION}*" \
+        lld-"${LLVM_VERSION}*" \
         bison \
         cmake \
         flex \
@@ -34,6 +36,8 @@ RUN set -eu; \
         quilt \
     ; \
     rm -rf /var/lib/apt/lists/*; \
+    update-alternatives --install /usr/local/bin/clang clang /usr/bin/clang-${LLVM_VERSION} 100 ; \
+    update-alternatives --install /usr/local/bin/clang++ clang++ /usr/bin/clang++-${LLVM_VERSION} 100 ; \
     echo 'en_US.UTF-8 UTF-8' >> /etc/locale.gen && locale-gen
 ENV LANG=en_US.UTF-8
 ENV EDITOR=vim.tiny
@@ -55,20 +59,6 @@ RUN set -eu; \
     wget -qO- https://git.openembedded.org/bitbake/snapshot/bitbake-${BITBAKE_VERSION}.tar.gz \
         | tar -xzf- --strip 1
 ENV PATH=/bitbake/bin:$PATH
-
-## LLVM
-# https://apt.llvm.org/
-
-RUN set -eu; \
-    wget -qO- https://apt.llvm.org/llvm-snapshot.gpg.key|tee /etc/apt/trusted.gpg.d/apt.llvm.org.asc ; \
-    echo "deb http://apt.llvm.org/${DEBIAN_VERSION}/ llvm-toolchain-${DEBIAN_VERSION}-${LLVM_VERSION} main" \
-        > /etc/apt/sources.list.d/llvm.list ; \
-    apt-get update -q && apt-get install -qy --no-install-recommends \
-        clang-"${LLVM_VERSION}*" \
-        lld-"${LLVM_VERSION}*" \
-    ; \
-    update-alternatives --install /usr/local/bin/clang clang /usr/bin/clang-${LLVM_VERSION} 100 ; \
-    update-alternatives --install /usr/local/bin/clang++ clang++ /usr/bin/clang++-${LLVM_VERSION} 100 ;
 
 ## UPX
 # https://upx.github.io/
